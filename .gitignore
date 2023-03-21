@@ -1,0 +1,6 @@
+venv
+.localstack
+.mypy_cache
+.pytest_cache
+.idea/*
+/.env

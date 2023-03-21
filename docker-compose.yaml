@@ -1,0 +1,13 @@
+version: '3.2'
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: try_localstack
+    ports:
+      - '4563-4599:4563-4599'
+      - '8055:8080'
+    env_file:
+      - ./.env
+    volumes:
+      - './.localstack:/var/lib/localstack'
+      - '/var/run/docker.sock:/var/run/docker.sock'

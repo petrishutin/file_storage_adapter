@@ -1,0 +1,17 @@
+fastapi~=0.95.0
+uvicorn
+pytest~=7.2.2
+pytest-asyncio
+pydantic[dotenv]~=1.10.6
+httpx
+aiobotocore[awscli]~=2.5.0
+localstack
+python-multipart
+
+# linters and formatters
+black
+flake8
+flake8-print
+isort
+mypy
+coverage
