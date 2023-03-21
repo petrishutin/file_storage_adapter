@@ -2,12 +2,12 @@ import logging
 import os
 import pathlib
 
-from app.config import Config
+from app.settings import Settings
 from app.file_storage.base_file_storage import FileStorage
 
 
 class LocalFileStorage(FileStorage):
-    def __init__(self, service_settings: Config):
+    def __init__(self, service_settings: Settings):
         super().__init__(service_settings)
         self.storage_dir: str = service_settings.LOCAL_FILE_STORAGE_DIR
         if not os.path.exists(self.storage_dir):

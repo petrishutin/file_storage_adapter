@@ -1,10 +1,10 @@
 from abc import ABC
 
-from app.config import Config
+from app.settings import Settings
 
 
 class FileStorage(ABC):
-    def __init__(self, service_settings: Config):
+    def __init__(self, service_settings: Settings):
         pass
 
     async def upload(self, bucket_name: str, filename: str, file_data: bytes) -> bool:
