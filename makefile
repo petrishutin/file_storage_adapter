@@ -8,8 +8,6 @@ down:
 		docker-compose down
 
 lint:
-	black .
-	isort .
 	black --check .
 	isort --check-only .
 	flake8
