@@ -32,6 +32,4 @@ async def upload_data(
 
 @app.get("/", response_class=Response)
 async def download_data(file_name: uuid.UUID, client: FileStorage = Depends(storage)):
-    return Response(
-        await client.download("main", str(file_name)), media_type="image/jpg"
-    )
+    return Response(await client.download("main", str(file_name)), media_type="image/jpg")

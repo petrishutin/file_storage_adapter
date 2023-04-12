@@ -1,4 +1,3 @@
-import contextvars
 import os
 import shutil
 import uuid
@@ -7,10 +6,6 @@ import pytest
 
 import app.file_storage
 from app.settings import Settings
-
-file_storage_service_type: contextvars.ContextVar = contextvars.ContextVar(
-    "LocalFileStorage"
-)
 
 
 @pytest.fixture(
@@ -22,7 +17,6 @@ def storage(request):
         FILE_STORAGE_SERVICE=request.param,
         LOCAL_FILE_STORAGE_DIR=os.path.join(os.getcwd(), "storage_test"),
     )
-    file_storage_service_type.set(request.param)
     store = getattr(app.file_storage, request.param)(test_settings)
     yield store
     try:

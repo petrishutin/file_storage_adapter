@@ -4,3 +4,4 @@ venv
 .pytest_cache
 .idea/*
 /.env
+app/.file_storage
