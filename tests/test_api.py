@@ -1,8 +1,6 @@
 import uuid
 from http import HTTPStatus
 
-import pytest
-
 
 def test_upload(client):
     """response status is OK and body contains correct cropped image"""

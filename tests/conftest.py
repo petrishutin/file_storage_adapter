@@ -1,4 +1,3 @@
-import contextvars
 import os
 import shutil
 from os.path import join

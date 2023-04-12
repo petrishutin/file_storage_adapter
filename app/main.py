@@ -3,8 +3,8 @@ import uuid
 
 from fastapi import Depends, FastAPI, File, Response
 
-from app.settings import settings
 from app.file_storage import FileStorage, LocalFileStorage, S3FileStorage
+from app.settings import settings
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,8 @@ def storage():
 
 @app.post("/", status_code=201)
 async def upload_data(
-        file: bytes = File(), client: FileStorage = Depends(storage),
+    file: bytes = File(),
+    client: FileStorage = Depends(storage),
 ):
     file_name = uuid.uuid4()
     await client.upload("main", str(file_name), file)
@@ -30,9 +31,7 @@ async def upload_data(
 
 
 @app.get("/", response_class=Response)
-async def download_data(
-        file_name: uuid.UUID, client: FileStorage = Depends(storage)
-):
+async def download_data(file_name: uuid.UUID, client: FileStorage = Depends(storage)):
     return Response(
         await client.download("main", str(file_name)), media_type="image/jpg"
     )

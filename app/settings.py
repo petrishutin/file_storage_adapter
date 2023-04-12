@@ -1,3 +1,4 @@
+
 import os
 from enum import Enum
 
@@ -12,7 +13,8 @@ class FileStorageService(str, Enum):
 
 
 class Settings(BaseSettings):
-    FILE_STORAGE_SERVICE: FileStorageService = "S3FileStorage"  # type: ignore
+    FILE_STORAGE_SERVICE: FileStorageService = "LocalFileStorage"  # type: ignore
+    BUCKET_NAME: str = "main"  # pass bucket name at your service here
 
     # Local file_storage settings ----------------------------------
     LOCAL_FILE_STORAGE_DIR: str = os.getcwd() + "/app/.file_storage"

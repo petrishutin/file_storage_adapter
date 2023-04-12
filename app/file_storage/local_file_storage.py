@@ -2,8 +2,8 @@ import logging
 import os
 import pathlib
 
-from app.settings import Settings
 from app.file_storage.base_file_storage import FileStorage
+from app.settings import Settings
 
 
 class LocalFileStorage(FileStorage):

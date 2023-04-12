@@ -2,14 +2,15 @@ import contextvars
 import os
 import shutil
 import uuid
-from unittest.mock import patch
 
 import pytest
 
 import app.file_storage
 from app.settings import Settings
 
-file_storage_service_type: contextvars.ContextVar = contextvars.ContextVar("LocalFileStorage")
+file_storage_service_type: contextvars.ContextVar = contextvars.ContextVar(
+    "LocalFileStorage"
+)
 
 
 @pytest.fixture(
