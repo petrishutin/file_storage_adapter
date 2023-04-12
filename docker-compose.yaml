@@ -6,8 +6,11 @@ services:
     ports:
       - '4563-4599:4563-4599'
       - '8055:8080'
-    env_file:
-      - ./.env
+    environment:
+      - AWS_REGION_NAME=us-east-1
+      - AWS_ENDPOINT_URL=http://localhost:4566
+      - AWS_ACCESS_KEY_ID=access_key
+      - AWS_SECRET_ACCESS_KEY=secret_key
     volumes:
       - './.localstack:/var/lib/localstack'
       - '/var/run/docker.sock:/var/run/docker.sock'
