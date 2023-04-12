@@ -1,11 +1,10 @@
 fastapi~=0.95.0
 uvicorn
-pytest~=7.2.2
+pytest==7.3.0
 pytest-asyncio
 pydantic[dotenv]~=1.10.6
-httpx
+httpx==0.24.0
 aiobotocore[awscli]~=2.5.0
-localstack
 python-multipart
 
 # linters and formatters

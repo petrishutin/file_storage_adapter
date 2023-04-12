@@ -1,0 +1,19 @@
+name: Run tests on any Push event
+on:
+  push:
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3.2.0
+
+      - name: Install code dependency
+        run: pip install -r requirements.txt
+
+      - name: Run linters
+        run: make lint
+
+      - name: Run pytest
+        run: make test
