@@ -6,10 +6,10 @@ import pytest
 
 def test_upload(client):
     """response status is OK and body contains correct cropped image"""
-    file_data = b"test"
+    file_data = "test"
     response = client.post("/", data={"file": file_data})
     assert response.status_code == HTTPStatus.CREATED
-    assert response.json() == str(uuid.UUID(response.json()))
+    assert uuid.UUID(response.json())
 
 
 def test_download(client):

@@ -11,8 +11,8 @@ class S3FileStorage(FileStorage):
         super().__init__(service_settings)
         self.aws_access_key_id = service_settings.AWS_ACCESS_KEY_ID
         self.aws_secret_access_key = service_settings.AWS_SECRET_ACCESS_KEY
-        self.region_name = service_settings.REGION_NAME
-        self.endpoint_url = service_settings.ENDPOINT_URL
+        self.region_name = service_settings.AWS_REGION_NAME
+        self.endpoint_url = service_settings.AWS_ENDPOINT_URL
         self.session = get_session()
         self.bucket_list = []
 

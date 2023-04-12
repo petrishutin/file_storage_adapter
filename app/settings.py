@@ -18,8 +18,8 @@ class Settings(BaseSettings):
     LOCAL_FILE_STORAGE_DIR: str = os.getcwd() + "/app/.file_storage"
 
     # S3 file_storage settings -------------------------------------
-    REGION_NAME: str = "us-east-1"
-    ENDPOINT_URL: str = "http://localhost:4566"
+    AWS_REGION_NAME: str = "us-east-1"
+    AWS_ENDPOINT_URL: str = "http://localhost:4566"
     AWS_SECRET_ACCESS_KEY: str = "aaa"
     AWS_ACCESS_KEY_ID: str = "bbb"
 

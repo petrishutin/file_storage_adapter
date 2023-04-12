@@ -1,10 +1,9 @@
 import logging
 import uuid
-from functools import lru_cache
 
 from fastapi import Depends, FastAPI, File, Response
 
-from app.settings import Settings
+from app.settings import settings
 from app.file_storage import FileStorage, LocalFileStorage, S3FileStorage
 
 logger = logging.getLogger(__name__)
@@ -12,17 +11,13 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 
 
-@lru_cache()
-def get_settings():
-    return Settings()
-
-
-def storage(config=Depends(get_settings)):
+def storage():
+    """Getting file storage type configured in app settings and returns file storage client instance."""
     file_storage_mapping = {
         "LocalFileStorage": LocalFileStorage,
         "S3FileStorage": S3FileStorage,
     }
-    return file_storage_mapping[config.FILE_STORAGE_SERVICE](config)
+    return file_storage_mapping[settings.FILE_STORAGE_SERVICE](settings)
 
 
 @app.post("/", status_code=201)
