@@ -8,7 +8,10 @@ from app.settings import settings
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
+app = FastAPI(
+    docs_url="/api/v1/docs" if settings.TEST_MODE else None,
+    redoc_url="/api/v1/redoc" if settings.TEST_MODE else None,
+)
 
 
 def storage():

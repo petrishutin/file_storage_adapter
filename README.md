@@ -4,7 +4,15 @@ This is a simple file storage adapter for different services:
 
 - [Local] (Uses the local filesystem)
 - [Amazon S3](https://aws.amazon.com/s3/)
-- Soon [Google Cloud Storage](https://cloud.google.com/storage/)
+- [Google Cloud Storage](https://cloud.google.com/storage/)
+
+## Principal features
+
+- Takes bytes and return UUID at '<host>/'
+- Take UUID and return bytes in file exists at '<host>/{uuid}'
+- Delete file by UUID '<host>/{uuid}'
+
+You can find the API documentation at '<host>/docs' in TEST_MODE
 
 ## Installation
 
