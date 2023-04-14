@@ -12,17 +12,19 @@ class FileStorageService(str, Enum):
 
 
 class Settings(BaseSettings):
+    TEST_MODE: bool = True
     FILE_STORAGE_SERVICE: FileStorageService = "LocalFileStorage"  # type: ignore
-    BUCKET_NAME: str = "main"  # pass bucket name at your service here
+    BUCKETS: str = "main, test"  # pass bucket names separated by comma at your cloud service here
+    BUCKET_LIST: list[str] = [i.strip() for i in BUCKETS.split(",")]
 
     # Local file_storage settings ----------------------------------
-    LOCAL_FILE_STORAGE_DIR: str = os.getcwd() + "/app/.file_storage"
+    LOCAL_FILE_STORAGE_DIR: str = os.path.join(os.getcwd(), ".local_file_storage")
 
     # S3 file_storage settings -------------------------------------
     AWS_REGION_NAME: str = "us-east-1"
     AWS_ENDPOINT_URL: str = "http://localhost:4566"
-    AWS_SECRET_ACCESS_KEY: str = "aaa"
-    AWS_ACCESS_KEY_ID: str = "bbb"
+    AWS_SECRET_ACCESS_KEY: str = "access_key"
+    AWS_ACCESS_KEY_ID: str = "secret_key"
 
     class Config:
         env_file = "../.env"

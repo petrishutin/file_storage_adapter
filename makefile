@@ -7,6 +7,14 @@ stop:
 down:
 		docker-compose down
 
+reformat:
+	black .
+	isort .
+	flake8
+	mypy ./app
+	mypy ./tests
+
+
 lint:
 	black --check .
 	isort --check-only .
