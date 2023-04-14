@@ -15,17 +15,17 @@ class FileStorage(ABC):
     async def upload(self, bucket_name: str, filename: str, file_data: bytes) -> bool:
         raise NotImplementedError
 
-    async def upload_many(self, bucket_name: str, files: dict) -> [bytes]:
-        await asyncio.gather(*[self.upload(*file) for file in files])
+    async def upload_many(self, bucket_name: str, files: dict) -> list[bytes]:
+        return await asyncio.gather(*[self.upload(*file) for file in files])
 
     async def download(self, bucket_name: str, filename: str) -> bytes:
         raise NotImplementedError
 
-    async def download_many(self, bucket_name: str, files: dict) -> [bytes]:
+    async def download_many(self, bucket_name: str, files: dict) -> list[bytes]:
         return await asyncio.gather(*[self.download(*file) for file in files])
 
     async def delete(self, bucket_name: str, filename: str) -> bool:
         raise NotImplementedError
 
-    async def delete_many(self, bucket_name: str, files: dict) -> [bool]:
+    async def delete_many(self, bucket_name: str, files: dict) -> list[bool]:
         return await asyncio.gather(*[self.delete(*file) for file in files])
