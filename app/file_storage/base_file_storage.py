@@ -29,3 +29,7 @@ class FileStorage(ABC):
 
     async def delete_many(self, bucket_name: str, files: dict) -> list[bool]:
         return await asyncio.gather(*[self.delete(*file) for file in files])
+
+
+class BucketNotFoundError(Exception):
+    pass

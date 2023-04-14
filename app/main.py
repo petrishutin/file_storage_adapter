@@ -1,9 +1,10 @@
 import logging
 import uuid
 
-from fastapi import Depends, FastAPI, File, Response
+from fastapi import Depends, FastAPI, File, Request, Response
+from fastapi.responses import JSONResponse
 
-from app.file_storage import FileStorage, LocalFileStorage, S3FileStorage
+from app.file_storage import BucketNotFoundError, FileStorage, LocalFileStorage, S3FileStorage
 from app.settings import settings
 
 logger = logging.getLogger(__name__)
@@ -18,6 +19,22 @@ def storage():
         "S3FileStorage": S3FileStorage,
     }
     return file_storage_mapping[settings.FILE_STORAGE_SERVICE](settings)
+
+
+@app.exception_handler(FileNotFoundError)
+async def file_not_found_handler(request: Request, exc: FileNotFoundError):
+    return JSONResponse(
+        status_code=404,
+        content={"message": f"File not found: {exc}"},
+    )
+
+
+@app.exception_handler(BucketNotFoundError)
+async def bucket_not_found_handler(request: Request, exc: BucketNotFoundError):
+    return JSONResponse(
+        status_code=404,
+        content={"message": f"Bucket not found: {exc}"},
+    )
 
 
 @app.on_event("startup")
@@ -35,30 +52,17 @@ async def upload_data(
     client: FileStorage = Depends(storage),
 ):
     file_name = uuid.uuid4()
-    try:
-        await client.upload("main", str(file_name), file)
-    except ValueError:
-        return Response(status_code=400, content="Bucket not found")
+    await client.upload("main", str(file_name), file)
     return file_name
 
 
 @app.get("/", response_class=Response)
 async def download_data(file_name: uuid.UUID, client: FileStorage = Depends(storage)):
-    try:
-        result = await client.download("main", str(file_name))
-    except FileNotFoundError:
-        return Response(status_code=404, content="File not found")
-    except ValueError:
-        return Response(status_code=400, content="Bucket not found")
+    result = await client.download("main", str(file_name))
     return Response(result, media_type="image/jpg")
 
 
 @app.delete("/", status_code=204)
 async def delete_data(file_name: uuid.UUID, client: FileStorage = Depends(storage)):
-    try:
-        await client.delete("main", str(file_name))
-    except FileNotFoundError:
-        return Response(status_code=404, content="File not found")
-    except ValueError:
-        return Response(status_code=400, content="Bucket not found")
+    await client.delete("main", str(file_name))
     return Response(status_code=204)

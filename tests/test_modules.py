@@ -49,7 +49,7 @@ async def test_get_file_not_exist(storage):
 @pytest.mark.asyncio
 async def test_get_bucket_not_exist(storage):
     """This test shows that we need to handle FileNotFountError in web app"""
-    with pytest.raises(ValueError):
+    with pytest.raises(app.file_storage.BucketNotFoundError):
         await storage.download("not_main", str(uuid.uuid4()))
 
 

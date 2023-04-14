@@ -3,7 +3,7 @@ import logging
 from aiobotocore.session import get_session  # type: ignore
 from botocore.exceptions import ClientError  # type: ignore
 
-from app.file_storage.base_file_storage import FileStorage
+from app.file_storage.base_file_storage import BucketNotFoundError, FileStorage
 
 
 class S3FileStorage(FileStorage):
@@ -34,17 +34,19 @@ class S3FileStorage(FileStorage):
                 if bucket not in buckets_at_remote["Buckets"]:
                     await client.create_bucket(Bucket=bucket)
 
+    def _check_bucket(self, bucket_name):
+        if bucket_name not in self.bucket_list:
+            raise BucketNotFoundError("Bucket not found")
+
     async def upload(self, bucket_name, file_name, file_data):
         async with self._create_client() as client:
-            if bucket_name not in self.bucket_list:
-                raise ValueError("Bucket not found")
+            self._check_bucket(bucket_name)
             await client.put_object(Bucket=bucket_name, Key=file_name, Body=file_data)
             return True
 
     async def download(self, bucket_name, file_name):
         async with self._create_client() as client:
-            if bucket_name not in self.bucket_list:
-                raise ValueError("Bucket not found")
+            self._check_bucket(bucket_name)
             try:
                 response = await client.get_object(Bucket=bucket_name, Key=file_name)
             except ClientError as e:
@@ -54,8 +56,7 @@ class S3FileStorage(FileStorage):
 
     async def delete(self, bucket_name, file_name):
         async with self._create_client() as client:
-            if bucket_name not in self.bucket_list:
-                raise ValueError("Bucket not found")
+            self._check_bucket(bucket_name)
             try:
                 await client.delete_object(Bucket=bucket_name, Key=file_name)
             except ClientError as e:

@@ -2,7 +2,7 @@ import logging
 import os
 import pathlib
 
-from app.file_storage.base_file_storage import FileStorage
+from app.file_storage.base_file_storage import BucketNotFoundError, FileStorage
 from app.settings import Settings
 
 
@@ -24,9 +24,12 @@ class LocalFileStorage(FileStorage):
         for bucket in self.bucket_list:
             self._create_buket_if_not_exist(bucket)
 
-    async def upload(self, bucket_name: str, filename: str, file_data: bytes) -> bool:
+    def _check_bucket_exist(self, bucket_name: str):
         if not os.path.exists(os.path.join(self.storage_dir, bucket_name)):
-            raise ValueError(f"Bucket {bucket_name} does not exist")
+            raise BucketNotFoundError(f"Bucket {bucket_name} does not exist")
+
+    async def upload(self, bucket_name: str, filename: str, file_data: bytes) -> bool:
+        self._check_bucket_exist(bucket_name)
         try:
             with open(os.path.join(self.storage_dir, bucket_name, filename), "wb+") as file:
                 file.write(file_data)
@@ -36,13 +39,13 @@ class LocalFileStorage(FileStorage):
             return False
 
     async def download(self, bucket_name: str, filename: str) -> bytes:
-        if not os.path.exists(os.path.join(self.storage_dir, bucket_name)):
-            raise ValueError(f"Bucket {bucket_name} does not exist")
+        self._check_bucket_exist(bucket_name)
         with open(f"{self.storage_dir}/{bucket_name}/{filename}", "rb") as file:
             r = file.read()
             return r
 
     async def delete(self, bucket_name: str, filename: str) -> bool:
+        self._check_bucket_exist(bucket_name)
         try:
             os.remove(f"{self.storage_dir}/{bucket_name}/{filename}")
             return True
