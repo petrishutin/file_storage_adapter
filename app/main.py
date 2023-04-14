@@ -18,6 +18,7 @@ def storage():
         "LocalFileStorage": LocalFileStorage,
         "S3FileStorage": S3FileStorage,
     }
+    print(os.environ.get("FileStorageService"))
     return file_storage_mapping[settings.FILE_STORAGE_SERVICE](settings)
 
 
