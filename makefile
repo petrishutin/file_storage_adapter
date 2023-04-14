@@ -7,6 +7,10 @@ stop:
 down:
 		docker-compose down
 
+reformat:
+	black .
+	isort .
+
 lint:
 	black --check .
 	isort --check-only .
