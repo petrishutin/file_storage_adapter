@@ -1,6 +1,7 @@
 import logging
 import os
 import pathlib
+from uuid import uuid4
 
 from app.file_storage.base_file_storage import BucketNotFoundError, FileStorage
 from app.settings import Settings
@@ -14,7 +15,7 @@ class LocalFileStorage(FileStorage):
             path = pathlib.Path(self.storage_dir)
             path.mkdir(parents=True)
 
-    def _create_buket_if_not_exist(self, bucket):
+    def _create_buket_if_not_exist(self, bucket: str):
         path_to_bucket = os.path.join(self.storage_dir, bucket)
         if not os.path.exists(path_to_bucket):
             path = pathlib.Path(path_to_bucket)
@@ -28,27 +29,27 @@ class LocalFileStorage(FileStorage):
         if not os.path.exists(os.path.join(self.storage_dir, bucket_name)):
             raise BucketNotFoundError(f"Bucket {bucket_name} does not exist")
 
-    async def upload(self, bucket_name: str, filename: str, file_data: bytes) -> bool:
-        self._check_bucket_exist(bucket_name)
+    async def upload(self, file_data: bytes) -> str:
+        filename = str(uuid4())
+        bucket = self._get_bucket_name(str(filename))
+        self._check_bucket_exist(bucket)
         try:
-            with open(os.path.join(self.storage_dir, bucket_name, filename), "wb+") as file:
+            with open(os.path.join(self.storage_dir, bucket, filename), "wb+") as file:
                 file.write(file_data)
-            return True
+            return filename
         except Exception as e:
             logging.error(f"Can not save file {filename}. Error {e}")
-            return False
+            raise e
 
-    async def download(self, bucket_name: str, filename: str) -> bytes:
-        self._check_bucket_exist(bucket_name)
-        with open(f"{self.storage_dir}/{bucket_name}/{filename}", "rb") as file:
+    async def download(self, filename: str) -> bytes:
+        bucket = self._get_bucket_name(str(filename))
+        self._check_bucket_exist(bucket)
+        with open(os.path.join(self.storage_dir, bucket, filename), "rb") as file:
             r = file.read()
             return r
 
-    async def delete(self, bucket_name: str, filename: str) -> bool:
-        self._check_bucket_exist(bucket_name)
-        try:
-            os.remove(f"{self.storage_dir}/{bucket_name}/{filename}")
-            return True
-        except Exception as e:
-            logging.error(f"Can not delete file {filename}. Error {e}")
-            return False
+    async def delete(self, filename: str) -> None:
+        bucket = self._get_bucket_name(str(filename))
+        self._check_bucket_exist(bucket)
+        os.remove(os.path.join(self.storage_dir, bucket, str(filename)))
+        return None

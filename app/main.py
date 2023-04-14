@@ -1,5 +1,4 @@
 import logging
-import uuid
 
 from fastapi import Depends, FastAPI, File, Request, Response
 from fastapi.responses import JSONResponse
@@ -51,18 +50,15 @@ async def upload_data(
     file: bytes = File(),
     client: FileStorage = Depends(storage),
 ):
-    file_name = uuid.uuid4()
-    await client.upload("main", str(file_name), file)
-    return file_name
+    return await client.upload(file)
 
 
 @app.get("/", response_class=Response)
-async def download_data(file_name: uuid.UUID, client: FileStorage = Depends(storage)):
-    result = await client.download("main", str(file_name))
-    return Response(result, media_type="image/jpg")
+async def download_data(file_name: str, client: FileStorage = Depends(storage)):
+    return Response(await client.download(file_name))
 
 
 @app.delete("/", status_code=204)
-async def delete_data(file_name: uuid.UUID, client: FileStorage = Depends(storage)):
-    await client.delete("main", str(file_name))
+async def delete_data(file_name: str, client: FileStorage = Depends(storage)):
+    await client.delete(file_name)
     return Response(status_code=204)

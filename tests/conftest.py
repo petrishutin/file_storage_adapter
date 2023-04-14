@@ -14,6 +14,7 @@ from app.main import app
 )
 def client(request):
     os.environ["FileStorageService"] = request.param
+    os.environ["LocalFileStorageDir"] = "storage_test"
     with TestClient(app) as client:
         yield client
     shutil.rmtree(join(os.getcwd(), "storage_test"), ignore_errors=True)

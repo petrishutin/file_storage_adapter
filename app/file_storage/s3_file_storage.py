@@ -1,4 +1,4 @@
-import logging
+from uuid import uuid4
 
 from aiobotocore.session import get_session  # type: ignore
 from botocore.exceptions import ClientError  # type: ignore
@@ -38,28 +38,31 @@ class S3FileStorage(FileStorage):
         if bucket_name not in self.bucket_list:
             raise BucketNotFoundError("Bucket not found")
 
-    async def upload(self, bucket_name, file_name, file_data):
+    async def upload(self, file_data: bytes) -> str:
+        filename = str(uuid4())
+        bucket = self._get_bucket_name(str(filename))
         async with self._create_client() as client:
-            self._check_bucket(bucket_name)
-            await client.put_object(Bucket=bucket_name, Key=file_name, Body=file_data)
-            return True
+            self._check_bucket(bucket)
+            await client.put_object(Bucket=bucket, Key=filename, Body=file_data)
+            return filename
 
-    async def download(self, bucket_name, file_name):
+    async def download(self, filename: str) -> bytes:
+        bucket = self._get_bucket_name(str(filename))
         async with self._create_client() as client:
-            self._check_bucket(bucket_name)
+            self._check_bucket(bucket)
             try:
-                response = await client.get_object(Bucket=bucket_name, Key=file_name)
+                response = await client.get_object(Bucket=bucket, Key=filename)
             except ClientError as e:
-                logging.error(f"Can not find file in S3 {e}")
-                raise FileNotFoundError("File not found")
+                raise FileNotFoundError(f"File not found: {e}")
             return await response["Body"].read()
 
-    async def delete(self, bucket_name, file_name):
+    async def delete(self, filename: str) -> None:
+        bucket = self._get_bucket_name(str(filename))
         async with self._create_client() as client:
-            self._check_bucket(bucket_name)
+            self._check_bucket(bucket)
             try:
-                await client.delete_object(Bucket=bucket_name, Key=file_name)
+                await client.get_object(Bucket=bucket, Key=filename)
             except ClientError as e:
-                logging.error(f"Can not delete file in S3 {e}")
-                raise FileNotFoundError("File not found")
-            return True
+                raise FileNotFoundError(f"File not found {e}")
+            await client.delete_object(Bucket=bucket, Key=filename)
+            return None

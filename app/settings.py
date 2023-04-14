@@ -14,7 +14,9 @@ class FileStorageService(str, Enum):
 class Settings(BaseSettings):
     TEST_MODE: bool = True
     FILE_STORAGE_SERVICE: FileStorageService = "LocalFileStorage"  # type: ignore
-    BUCKETS: str = "main, test"  # pass bucket names separated by comma at your cloud service here
+    BUCKETS: str = (
+        "bucket-1, bucket-2, bucket-3, bucket-4"  # pass bucket names separated by comma at your cloud service here
+    )
     BUCKET_LIST: list[str] = [i.strip() for i in BUCKETS.split(",")]
 
     # Local file_storage settings ----------------------------------
