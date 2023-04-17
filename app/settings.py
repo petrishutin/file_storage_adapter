@@ -9,14 +9,13 @@ class FileStorageService(str, Enum):
 
     LOCAL_FILE_STORAGE = "LocalFileStorage"
     S3_FILE_STORAGE = "S3FileStorage"
+    GOOGLE_CLOUD_STORAGE = "GoogleCloudFileStorage"
 
 
 class Settings(BaseSettings):
-    TEST_MODE: bool = True
     FILE_STORAGE_SERVICE: FileStorageService = "LocalFileStorage"  # type: ignore
-    BUCKETS: str = (
-        "bucket-1, bucket-2, bucket-3, bucket-4"  # pass bucket names separated by comma at your cloud service here
-    )
+    # pass bucket names separated by comma at your cloud service here
+    BUCKETS: str = os.getenv("BUCKETS")  # pass bucket names separated by comma at your cloud service here
     BUCKET_LIST: list[str] = [i.strip() for i in BUCKETS.split(",")]
 
     # Local file_storage settings ----------------------------------
@@ -28,8 +27,11 @@ class Settings(BaseSettings):
     AWS_SECRET_ACCESS_KEY: str = "access_key"
     AWS_ACCESS_KEY_ID: str = "secret_key"
 
+    # Google Cloud Storage settings -------------------------------------
+    GOOGLE_APPLICATION_CREDENTIALS: str = "project-credentials.json"
+
     class Config:
-        env_file = "../.env"
+        env_file = "/.env"
         env_file_encoding = "utf-8"
 
 

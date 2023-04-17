@@ -6,6 +6,9 @@ pydantic[dotenv]~=1.10.6
 httpx>=0.24.0
 aiobotocore[awscli]~=2.5.0
 python-multipart
+google-cloud-storage
+gcloud-aio-storage
+aiohttp
 
 # linters and formatters
 black

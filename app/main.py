@@ -1,10 +1,11 @@
 import logging
+import os
 
 from fastapi import Depends, FastAPI, File, Request, Response
 from fastapi.responses import JSONResponse
 
-from app.file_storage import BucketNotFoundError, FileStorage, LocalFileStorage, S3FileStorage
-from app.settings import settings
+from app.file_storage import BucketNotFoundError, FileStorage, LocalFileStorage, S3FileStorage, GoogleCloudFileStorage
+from app.settings import Settings
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +24,7 @@ def storage(settings: Settings = Depends(get_settings)):
     file_storage_mapping = {
         "LocalFileStorage": LocalFileStorage,
         "S3FileStorage": S3FileStorage,
+        "GoogleCloudFileStorage": GoogleCloudFileStorage,
     }
     return file_storage_mapping[settings.FILE_STORAGE_SERVICE](settings)
 

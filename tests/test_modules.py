@@ -7,24 +7,23 @@ import pytest
 
 import app.file_storage
 from app.settings import Settings
+from tests.conftest import TEST_TARGETS
 
 
 @pytest.fixture(
     scope="module",
-    params=["LocalFileStorage", "S3FileStorage"],
+    params=TEST_TARGETS,
 )
 def storage(request):
     test_settings = Settings(
         FILE_STORAGE_SERVICE=request.param,
         LOCAL_FILE_STORAGE_DIR="storage_test",
+        BUCKETS=os.getenv("BUCKETS"),
     )
     store = getattr(app.file_storage, request.param)(test_settings)
     asyncio.run(store._init_buckets())  # pylint: disable=protected-access # noqa
     yield store
-    try:
-        shutil.rmtree(os.path.join(os.getcwd(), "storage_test"))
-    except FileNotFoundError:
-        pass
+    shutil.rmtree(os.path.join(os.getcwd(), "storage_test"), ignore_errors=True)
 
 
 @pytest.mark.asyncio
@@ -36,6 +35,7 @@ async def test_store_and_get(storage):
     assert uuid.UUID(filename)
     stored_file = await storage.download(filename)
     assert stored_file == file_data
+    await storage.delete(filename)
 
 
 @pytest.mark.asyncio

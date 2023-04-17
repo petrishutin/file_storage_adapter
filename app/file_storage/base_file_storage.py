@@ -10,7 +10,13 @@ class FileStorage(ABC):
         self.bucket_list: list[str] = service_settings.BUCKET_LIST
 
     def _get_bucket_name(self, filename: str) -> str:
+        """Internal method for get bucket index in a list of buckets by filename"""
         return self.bucket_list[int(UUID(filename)) % len(self.bucket_list)]
+
+    def _check_bucket(self, bucket_name):
+        """Internal method for check bucket name exists"""
+        if bucket_name not in self.bucket_list:
+            raise BucketNotFoundError(f"Bucket {bucket_name} not found")
 
     async def _init_buckets(self):
         """This method for test mode only. In production init your buckets outside the application"""

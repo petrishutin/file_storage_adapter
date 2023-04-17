@@ -5,3 +5,4 @@ venv
 .idea/*
 /.env
 .local_file_storage
+project-credentials.json

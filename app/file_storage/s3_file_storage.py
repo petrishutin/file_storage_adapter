@@ -34,10 +34,6 @@ class S3FileStorage(FileStorage):
                 if bucket not in buckets_at_remote["Buckets"]:
                     await client.create_bucket(Bucket=bucket)
 
-    def _check_bucket(self, bucket_name):
-        if bucket_name not in self.bucket_list:
-            raise BucketNotFoundError("Bucket not found")
-
     async def upload(self, file_data: bytes) -> str:
         filename = str(uuid4())
         bucket = self._get_bucket_name(str(filename))
