@@ -1,4 +1,3 @@
-import logging
 import os
 
 from fastapi import Depends, FastAPI, File, Request, Response
@@ -7,7 +6,6 @@ from fastapi.responses import JSONResponse
 from app.file_storage import BucketNotFoundError, FileStorage, LocalFileStorage, S3FileStorage, GoogleCloudFileStorage
 from app.settings import Settings
 
-logger = logging.getLogger(__name__)
 
 app = FastAPI(
     docs_url="/api/v1/docs" if os.getenv("TEST_MODE") == "True" else None,
@@ -50,7 +48,6 @@ async def init_buckets(client: FileStorage = Depends(storage)):
     """Initializing file storage client for test mode."""
     if os.getenv("TEST_MODE") == "True":
         await client._init_buckets()  # noqa
-    logger.info(f"{os.getenv('FILE_STORAGE_SERVICE')} buckets {os.getenv('BUCKETS')} inited")
 
 
 @app.post("/", status_code=201)

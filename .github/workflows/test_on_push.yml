@@ -2,6 +2,12 @@ name: Run tests on any Push event
 on:
   push:
 
+env:
+  TEST_MODE: True
+  BUCKETS: {{secret.BUCKETS}}
+  GOOGLE_APPLICATION_CREDENTIALS: {{secret.GOOGLE_APPLICATION_CREDENTIALS}}
+
+
 jobs:
   run_tests:
     runs-on: ubuntu-22.04
