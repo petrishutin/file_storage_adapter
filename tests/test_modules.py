@@ -10,7 +10,7 @@ from app.settings import Settings
 
 
 @pytest.fixture(
-    scope="function",
+    scope="module",
     params=["LocalFileStorage", "S3FileStorage"],
 )
 def storage(request):

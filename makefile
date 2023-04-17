@@ -23,8 +23,5 @@ lint:
 	mypy ./tests
 
 test: up
-	FILE_STORAGE_SERVICE=S3FileStorage
-	pytest -v
-	FILE_STORAGE_SERVICE=LocalFileStorage
 	pytest -v
 	docker-compose down

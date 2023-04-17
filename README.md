@@ -36,3 +36,8 @@ Same as above, but with the following environment variables:
 - AWS_SECRET_ACCESS_KEY
 
 You can find examples of these variables in the app/settings.py file.
+
+## TODOs
+
+- Add docker container
+- Split dependencies in requirements.txt to dev and prod
