@@ -9,12 +9,16 @@ from app.settings import settings
 logger = logging.getLogger(__name__)
 
 app = FastAPI(
-    docs_url="/api/v1/docs" if settings.TEST_MODE else None,
-    redoc_url="/api/v1/redoc" if settings.TEST_MODE else None,
+    docs_url="/api/v1/docs" if os.getenv("TEST_MODE") == "True" else None,
+    redoc_url="/api/v1/redoc" if os.getenv("TEST_MODE") == "True" else None,
 )
 
 
-def storage():
+def get_settings():
+    return Settings()
+
+
+def storage(settings: Settings = Depends(get_settings)):
     """Getting file storage type configured in app settings and returns file storage client instance."""
     file_storage_mapping = {
         "LocalFileStorage": LocalFileStorage,
@@ -40,17 +44,16 @@ async def bucket_not_found_handler(request: Request, exc: BucketNotFoundError):
 
 
 @app.on_event("startup")
-async def init_buckets():
+async def init_buckets(client: FileStorage = Depends(storage)):
     """Initializing file storage client for test mode."""
-    if settings.TEST_MODE:
-        client = storage()
-        await client._init_buckets()  # pylint: disable=protected-access # noqa
-    logger.info(f"{settings.FILE_STORAGE_SERVICE} buckets {settings.BUCKETS} inited")
+    if os.getenv("TEST_MODE") == "True":
+        await client._init_buckets()  # noqa
+    logger.info(f"{os.getenv('FILE_STORAGE_SERVICE')} buckets {os.getenv('BUCKETS')} inited")
 
 
 @app.post("/", status_code=201)
 async def upload_data(
-    file: bytes = File(),
+    file: bytes = File(...),
     client: FileStorage = Depends(storage),
 ):
     return await client.upload(file)
