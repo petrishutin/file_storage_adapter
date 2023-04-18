@@ -53,8 +53,8 @@ async def init_buckets(client: FileStorage = Depends(storage)):
 
 @app.post("/", status_code=201)
 async def upload_data(
-        file: bytes = File(...),
-        client: FileStorage = Depends(storage),
+    file: bytes = File(...),
+    client: FileStorage = Depends(storage),
 ):
     return await client.upload(file)
 

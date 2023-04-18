@@ -7,9 +7,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 import app.file_storage
-from app.main import app, get_settings, file_storage_mapping
+from app.main import app, file_storage_mapping, get_settings
 from app.settings import Settings
-
 
 if targets_from_env := os.environ.get("TEST_TARGETS", None):
     TEST_TARGETS = [i.strip() for i in targets_from_env.split(",")]
