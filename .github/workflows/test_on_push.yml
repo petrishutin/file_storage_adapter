@@ -18,12 +18,10 @@ jobs:
 #      - name: Run linters
 #        run: make lint
 
-      - name: Set ut Credentials
-        run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }} > credentials.json
-
       - name: Run pytest
         env:
           TEST_MODE: True
           BUCKETS: ${{ secrets.BUCKETS }}
           GOOGLE_APPLICATION_CREDENTIALS: credentials.json
+          run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }} > credentials.json
         run: make test
