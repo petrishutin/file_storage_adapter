@@ -8,12 +8,11 @@ on:
 jobs:
   run_tests:
     runs-on: ubuntu-22.04
+    env:
+      TEST_MODE: True
+      BUCKETS: ${{secret.BUCKETS}}
+      GOOGLE_APPLICATION_CREDENTIALS: credentials.json
     steps:
-      - env:
-          TEST_MODE: True
-          BUCKETS: ${{secret.BUCKETS}}
-          GOOGLE_APPLICATION_CREDENTIALS: credentials.json
-
       - name: Set ut Env
         run: echo ${{ secret.GOOGLE_APPLICATION_CREDENTIALS }} > credentials.json
 
