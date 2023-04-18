@@ -15,8 +15,8 @@ class FileStorageService(str, Enum):
 class Settings(BaseSettings):
     FILE_STORAGE_SERVICE: FileStorageService = "LocalFileStorage"  # type: ignore
     # pass bucket names separated by comma at your cloud service here
-    BUCKETS: str = os.getenv("BUCKETS")  # pass bucket names separated by comma at your cloud service here
-    BUCKET_LIST: list[str] = [i.strip() for i in BUCKETS.split(",")]
+    BUCKETS: str = os.getenv("BUCKETS")  # type: ignore
+    BUCKET_LIST: list[str] = [i.strip() for i in BUCKETS.split(",")]  # type: ignore
 
     # Local file_storage settings ----------------------------------
     LOCAL_FILE_STORAGE_DIR: str = os.path.join(os.getcwd(), ".local_file_storage")

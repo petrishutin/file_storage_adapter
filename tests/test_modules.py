@@ -21,7 +21,7 @@ def storage(request):
         BUCKETS=os.getenv("BUCKETS"),
     )
     store = getattr(app.file_storage, request.param)(test_settings)
-    asyncio.run(store._init_buckets())  # pylint: disable=protected-access # noqa
+    asyncio.run(store._init_buckets())  # noqa
     yield store
     shutil.rmtree(os.path.join(os.getcwd(), "storage_test"), ignore_errors=True)
 

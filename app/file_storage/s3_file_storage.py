@@ -3,7 +3,7 @@ from uuid import uuid4
 from aiobotocore.session import get_session  # type: ignore
 from botocore.exceptions import ClientError  # type: ignore
 
-from app.file_storage.base_file_storage import BucketNotFoundError, FileStorage
+from app.file_storage.base_file_storage import FileStorage
 
 
 class S3FileStorage(FileStorage):

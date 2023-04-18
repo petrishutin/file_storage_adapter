@@ -1,10 +1,9 @@
 from uuid import uuid4
 
-import google.api_core.exceptions
-from gcloud.aio.storage import Storage
 import aiohttp
+from gcloud.aio.storage import Storage
 
-from app.file_storage.base_file_storage import BucketNotFoundError, FileStorage
+from app.file_storage.base_file_storage import FileStorage
 
 
 class GoogleCloudFileStorage(FileStorage):
@@ -14,7 +13,7 @@ class GoogleCloudFileStorage(FileStorage):
         self.bucket_list = service_settings.BUCKET_LIST
 
     async def _init_buckets(self):
-        """We dont init buckets for google cloud storage"""
+        """We don`t init buckets for google cloud storage"""
         pass
 
     async def upload(self, file_data: bytes) -> str:
