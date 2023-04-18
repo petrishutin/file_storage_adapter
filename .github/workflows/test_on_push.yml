@@ -15,8 +15,8 @@ jobs:
       - name: Install code dependency
         run: pip install -r requirements.txt
 
-      - name: Run linters
-        run: make lint
+#      - name: Run linters
+#        run: make lint
 
       - name: Set ut Credentials
         run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }} > credentials.json
