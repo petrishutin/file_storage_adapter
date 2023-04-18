@@ -26,5 +26,5 @@ jobs:
           TEST_MODE: True
           BUCKETS: ${{ secrets.BUCKETS }}
           GOOGLE_APPLICATION_CREDENTIALS: credentials.json
-          run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }} > credentials.json
+          run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }} > ${{pwd}}/credentials.json
         run: make test
