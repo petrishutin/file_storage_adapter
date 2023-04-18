@@ -2,24 +2,26 @@ name: Run tests on any Push event
 on:
   push:
 
-env:
-  TEST_MODE: True
-  BUCKETS: ${{secret.BUCKETS}}
-  GOOGLE_APPLICATION_CREDENTIALS: credentials.json
+
 
 
 jobs:
   run_tests:
     runs-on: ubuntu-22.04
     steps:
+      - env:
+          TEST_MODE: True
+          BUCKETS: ${{secret.BUCKETS}}
+          GOOGLE_APPLICATION_CREDENTIALS: credentials.json
+
+      - name: Set ut Env
+        run: echo ${{ secret.GOOGLE_APPLICATION_CREDENTIALS }} > credentials.json
+
       - name: Check out repository code
         uses: actions/checkout@v3.2.0
 
       - name: Install code dependency
         run: pip install -r requirements.txt
-
-      - name: Create creadentials file
-        run: echo ${{secret.GOOGLE_APPLICATION_CREDENTIALS}} > credentials.json
 
       - name: Run linters
         run: make lint
