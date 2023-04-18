@@ -18,6 +18,9 @@ jobs:
 #      - name: Run linters
 #        run: make lint
 
+      - name: get dir
+        run: pwd
+
       - name: Run pytest
         env:
           TEST_MODE: True
