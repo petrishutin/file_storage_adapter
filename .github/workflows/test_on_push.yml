@@ -4,8 +4,8 @@ on:
 
 env:
   TEST_MODE: True
-  BUCKETS: {{secret.BUCKETS}}
-  GOOGLE_APPLICATION_CREDENTIALS: {{secret.GOOGLE_APPLICATION_CREDENTIALS}}
+  BUCKETS: ${{secret.BUCKETS}}
+  GOOGLE_APPLICATION_CREDENTIALS: credentials.json
 
 
 jobs:
@@ -17,6 +17,9 @@ jobs:
 
       - name: Install code dependency
         run: pip install -r requirements.txt
+
+      - name: Create creadentials file
+        run: echo ${{secret.GOOGLE_APPLICATION_CREDENTIALS}} > credentials.json
 
       - name: Run linters
         run: make lint
