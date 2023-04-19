@@ -7,14 +7,15 @@ import app.file_storage as file_storage
 from app.file_storage import BucketNotFoundError, FileStorage
 from app.settings import Settings
 
-app = FastAPI(
-    docs_url="/api/v1/docs" if os.getenv("TEST_MODE") else None,
-    redoc_url="/api/v1/redoc" if os.getenv("TEST_MODE") else None,
-)
-
 
 def get_settings():
     return Settings()
+
+
+app = FastAPI(
+    title="File storage service",
+    openapi_url=get_settings().OPENAPI_URL,
+)
 
 
 @app.exception_handler(FileNotFoundError)

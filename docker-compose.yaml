@@ -1,5 +1,18 @@
-version: '3.2'
+version: '3.8'
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${TARGET:-dev}
+    env_file:
+      - ./.env
+    command: /entrypoint.sh
+    ports:
+      - "8000:8000"
+    depends_on:
+      - localstack
+
   localstack:
     image: localstack/localstack:latest
     container_name: try_localstack

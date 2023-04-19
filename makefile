@@ -1,11 +1,20 @@
+deps:
+		pip install --upgrade pip
+		pip install -r requirements.txt
+		pip install -r requirements-dev.txt
+
 up:
-		docker-compose up -d --build
+	export TEST_MODE=1
+	docker-compose up --build
 
 stop:
-		docker-compose stop
+	docker-compose stop
 
 down:
-		docker-compose down
+	docker-compose down
+
+rebuild:
+	docker-compose up -d --build app
 
 reformat:
 	black .
@@ -22,7 +31,8 @@ lint:
 	mypy ./app
 	mypy ./tests
 
-test: up
+test:
 	export TEST_MODE=1
+	docker-compose up localstack
 	pytest -vv -s
 	docker-compose down

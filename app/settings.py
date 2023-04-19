@@ -13,7 +13,7 @@ class FileStorageService(str, Enum):
 
 
 class Settings(BaseSettings):
-    TEST_MODE: int = 0
+    OPENAPI_URL: str = "/openapi.json"  # set empty string to disable openapi
     FILE_STORAGE_TYPE: FileStorageService = "LocalFileStorage"  # type: ignore
     # pass bucket names separated by comma at your cloud service here
     BUCKETS: str = os.getenv("BUCKETS")  # type: ignore
@@ -30,6 +30,10 @@ class Settings(BaseSettings):
 
     # Google Cloud Storage settings -------------------------------------
     GOOGLE_APPLICATION_CREDENTIALS: str = "project-credentials.json"
+
+    # Test settings -------------------------------------
+    # Pass file_storage types names separated by comma here to test them
+    TEST_TARGETS: str = "LocalFileStorage, S3FileStorage, GoogleCloudFileStorage"
 
     class Config:
         env_file = ".env"

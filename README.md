@@ -8,11 +8,11 @@ This is a simple file storage adapter for different services:
 
 ## Principal features
 
-- Takes bytes and return UUID at '<host>/'
-- Take UUID and return bytes in file exists at '<host>/{uuid}'
-- Delete file by UUID '<host>/{uuid}'
+- Takes bytes and return UUID at '{host}/'
+- Take UUID and return bytes in file exists at '{host}/{uuid}'
+- Delete file by UUID '{host}/{uuid}'
 
-You can find the API documentation at '<host>/docs' in TEST_MODE
+You can find the API documentation at '{host}/docs' in TEST_MODE
 
 ## Installation
 
@@ -36,8 +36,3 @@ Same as above, but with the following environment variables:
 - AWS_SECRET_ACCESS_KEY
 
 You can find examples of these variables in the app/settings.py file.
-
-## TODOs
-
-- Add docker container
-- Split dependencies in requirements.txt to dev and prod

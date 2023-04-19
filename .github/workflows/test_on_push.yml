@@ -23,6 +23,4 @@ jobs:
         run: echo '${{ secrets.ENVS }}' > .env
 
       - name: Run pytest
-        env:
-          BUCKETS: ${{ secrets.BUCKETS }}
         run: make test
