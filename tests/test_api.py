@@ -1,4 +1,3 @@
-import os
 import uuid
 from http import HTTPStatus
 
@@ -26,7 +25,6 @@ def test_download_200(client):
 
 
 def test_delete_204(client):
-    print(os.getenv("BUCKETS"))
     """response status is OK and body contains correct cropped image"""
     with open("tests/assets/cat.jpg", "rb") as f:
         file_data = f.read()
