@@ -1,5 +1,3 @@
-import os
-
 from fastapi import Depends, FastAPI, File, Request, Response
 from fastapi.responses import JSONResponse
 
