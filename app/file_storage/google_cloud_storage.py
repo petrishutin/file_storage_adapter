@@ -4,10 +4,11 @@ import aiohttp
 from gcloud.aio.storage import Storage
 
 from app.file_storage.base_file_storage import FileStorage
+from app.settings import Settings
 
 
 class GoogleCloudFileStorage(FileStorage):
-    def __init__(self, service_settings):
+    def __init__(self, service_settings: Settings):
         super().__init__(service_settings)
         self.credentials = service_settings.GOOGLE_APPLICATION_CREDENTIALS
         self.bucket_list = service_settings.BUCKET_LIST
@@ -46,3 +47,9 @@ class GoogleCloudFileStorage(FileStorage):
             except aiohttp.ClientResponseError as e:
                 raise FileNotFoundError(f"File {filename} not found: {e}")
             return None
+
+    async def _set_up(self) -> None:
+        pass
+
+    async def _teardown(self) -> None:
+        pass

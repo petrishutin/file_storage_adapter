@@ -4,10 +4,11 @@ from aiobotocore.session import get_session  # type: ignore
 from botocore.exceptions import ClientError  # type: ignore
 
 from app.file_storage.base_file_storage import FileStorage
+from app.settings import Settings
 
 
 class S3FileStorage(FileStorage):
-    def __init__(self, service_settings):
+    def __init__(self, service_settings: Settings):  # type: ignore # noqa
         super().__init__(service_settings)
         self.aws_access_key_id = service_settings.AWS_ACCESS_KEY_ID
         self.aws_secret_access_key = service_settings.AWS_SECRET_ACCESS_KEY
@@ -24,15 +25,6 @@ class S3FileStorage(FileStorage):
             aws_secret_access_key=self.aws_secret_access_key,
             endpoint_url=self.endpoint_url,
         )
-
-    async def _init_buckets(self):
-        """Function to set up bucket in S3 in test mode.
-        This method for test mode only. In production init your buckets outside the application"""
-        async with self._create_client() as client:
-            buckets_at_remote = await client.list_buckets()
-            for bucket in self.bucket_list:
-                if bucket not in buckets_at_remote["Buckets"]:
-                    await client.create_bucket(Bucket=bucket)
 
     async def upload(self, file_data: bytes) -> str:
         filename = str(uuid4())
@@ -62,3 +54,23 @@ class S3FileStorage(FileStorage):
                 raise FileNotFoundError(f"File not found {e}")
             await client.delete_object(Bucket=bucket, Key=filename)
             return None
+
+    async def _set_up(self) -> None:
+        """Function to set up bucket in S3 in test mode.
+        This method for test mode only. In production init your buckets outside the application
+        """
+        async with self._create_client() as client:
+            buckets_at_remote = await client.list_buckets()
+            for bucket in self.bucket_list:
+                if bucket not in buckets_at_remote["Buckets"]:
+                    await client.create_bucket(Bucket=bucket)
+
+    async def _teardown(self) -> None:
+        """Function to delete bucket in S3 in test mode.
+        This method for test mode only. In production delete your buckets outside the application
+        """
+        async with self._create_client() as client:
+            buckets_at_remote = await client.list_buckets()
+            for bucket in self.bucket_list:
+                if bucket in buckets_at_remote["Buckets"]:
+                    await client.delete_bucket(Bucket=bucket)
