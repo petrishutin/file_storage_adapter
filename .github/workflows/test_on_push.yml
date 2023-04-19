@@ -2,9 +2,6 @@ name: Run tests on any Push event
 on:
   push:
 
-env:
-  BUCKETS: ${{ secrets.BUCKETS }}
-
 jobs:
   run_tests:
     runs-on: ubuntu-22.04
@@ -16,14 +13,17 @@ jobs:
       - name: Install code dependency
         run: pip install -r requirements.txt
 
-#      - name: Run linters
-#        run: make lint
+      - name: Run linters
+        run: make lint
 
       - name: Prepare GCP auth
         run: echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' > project-credentials.json
 
       - name: Create env file
         run: echo '${{ secrets.ENVS }}' > .env
+
+      - name: Create bucket env
+        run: echo 'BUCKETS = ${{ secrets.BUCKETS }}' >> $GITHUB_ENV
 
       - name: Run pytest
         run: make test
