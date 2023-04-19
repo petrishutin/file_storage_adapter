@@ -1,11 +1,11 @@
 import asyncio
 import os
-import shutil
 import uuid
 
 import pytest
 
 import app.file_storage
+from app.file_storage.base_file_storage import FileStorage
 from app.settings import Settings
 from tests.conftest import TEST_TARGETS
 
@@ -16,14 +16,14 @@ from tests.conftest import TEST_TARGETS
 )
 def storage(request):
     test_settings = Settings(
-        FILE_STORAGE_SERVICE=request.param,
+        FILE_STORAGE_TYPE=request.param,
         LOCAL_FILE_STORAGE_DIR="storage_test",
         BUCKETS=os.getenv("BUCKETS"),
     )
-    store = getattr(app.file_storage, request.param)(test_settings)
-    asyncio.run(store._init_buckets())  # noqa
+    store: FileStorage = getattr(app.file_storage, request.param)(test_settings)
+    asyncio.run(store._set_up())  # noqa
     yield store
-    shutil.rmtree(os.path.join(os.getcwd(), "storage_test"), ignore_errors=True)
+    asyncio.run(store._teardown())  # noqa
 
 
 @pytest.mark.asyncio

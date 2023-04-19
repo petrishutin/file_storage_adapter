@@ -5,6 +5,10 @@ from uuid import UUID
 from app.settings import Settings
 
 
+class BucketNotFoundError(Exception):
+    pass
+
+
 class FileStorage(ABC):
     def __init__(self, service_settings: Settings):
         self.bucket_list: list[str] = service_settings.BUCKET_LIST
@@ -17,10 +21,6 @@ class FileStorage(ABC):
         """Internal method for check bucket name exists"""
         if bucket_name not in self.bucket_list:
             raise BucketNotFoundError(f"Bucket {bucket_name} not found")
-
-    async def _init_buckets(self):
-        """This method for test mode only. In production init your buckets outside the application"""
-        raise NotImplementedError
 
     async def upload(self, file_data: bytes) -> str:
         raise NotImplementedError
@@ -41,6 +41,8 @@ class FileStorage(ABC):
         await asyncio.gather(*[self.delete(filename) for filename in filenames])
         return None
 
+    async def _set_up(self) -> None:
+        raise NotImplementedError
 
-class BucketNotFoundError(Exception):
-    pass
+    async def _teardown(self) -> None:
+        raise NotImplementedError

@@ -6,3 +6,4 @@ venv
 /.env
 .local_file_storage
 project-credentials.json
+pytest.ini

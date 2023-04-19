@@ -3,29 +3,18 @@ import os
 from fastapi import Depends, FastAPI, File, Request, Response
 from fastapi.responses import JSONResponse
 
+import app.file_storage as file_storage
 from app.file_storage import BucketNotFoundError, FileStorage, GoogleCloudFileStorage, LocalFileStorage, S3FileStorage
 from app.settings import Settings
 
 app = FastAPI(
-    docs_url="/api/v1/docs" if os.getenv("TEST_MODE") == "True" else None,
-    redoc_url="/api/v1/redoc" if os.getenv("TEST_MODE") == "True" else None,
+    docs_url="/api/v1/docs" if os.getenv("TEST_MODE") else None,
+    redoc_url="/api/v1/redoc" if os.getenv("TEST_MODE") else None,
 )
 
 
 def get_settings():
     return Settings()
-
-
-file_storage_mapping = {
-    "LocalFileStorage": LocalFileStorage,
-    "S3FileStorage": S3FileStorage,
-    "GoogleCloudFileStorage": GoogleCloudFileStorage,
-}
-
-
-def storage(settings: Settings = Depends(get_settings)):
-    """Getting file storage type configured in app settings and returns file storage client instance."""
-    return file_storage_mapping[settings.FILE_STORAGE_SERVICE](settings)
 
 
 @app.exception_handler(FileNotFoundError)
@@ -44,17 +33,15 @@ async def bucket_not_found_handler(request: Request, exc: BucketNotFoundError):
     )
 
 
-@app.on_event("startup")
-async def init_buckets(client: FileStorage = Depends(storage)):
-    """Initializing file storage client for test mode."""
-    if os.getenv("TEST_MODE") == "True":
-        await client._init_buckets()  # noqa
+def storage(settings: Settings = Depends(get_settings)):
+    """Getting file storage type configured in app settings and returns file storage client instance."""
+    return getattr(file_storage, settings.FILE_STORAGE_TYPE)(settings)
 
 
 @app.post("/", status_code=201)
 async def upload_data(
-    file: bytes = File(...),
-    client: FileStorage = Depends(storage),
+        file: bytes = File(...),
+        client: FileStorage = Depends(storage),
 ):
     return await client.upload(file)
 

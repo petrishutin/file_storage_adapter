@@ -23,5 +23,6 @@ lint:
 	mypy ./tests
 
 test: up
+	export TEST_MODE=1
 	pytest -v
 	docker-compose down
