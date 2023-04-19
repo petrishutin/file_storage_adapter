@@ -30,6 +30,7 @@ def get_settings_override():
 
 @pytest.fixture(scope="module", params=TEST_TARGETS)
 def client(request):
+    print(os.environ)
     dotenv.load_dotenv(dotenv_path=".env")
     file_storage_service_type.set(request.param)
     test_app.dependency_overrides[get_settings] = get_settings_override  # type: ignore # noqa
