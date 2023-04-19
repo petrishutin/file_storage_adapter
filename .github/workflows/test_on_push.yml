@@ -2,11 +2,12 @@ name: Run tests on any Push event
 on:
   push:
 
+env:
+  BUCKETS: ${{ secrets.BUCKETS }}
+
 jobs:
   run_tests:
     runs-on: ubuntu-22.04
-    env:
-      BUCKETS: ${{ secrets.BUCKETS }}
 
     steps:
       - name: Check out repository code
