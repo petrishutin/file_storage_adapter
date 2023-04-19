@@ -6,7 +6,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 import app.file_storage
-from app.main import app, file_storage_mapping, get_settings
+from app.main import app as test_app
+from app.main import file_storage_mapping, get_settings
 from app.settings import Settings
 
 if targets_from_env := os.environ.get("TEST_TARGETS", None):
@@ -28,10 +29,10 @@ def get_settings_override():
 @pytest.fixture(scope="module", params=TEST_TARGETS)
 def client(request):
     file_storage_service_type.set(request.param)
-    app.dependency_overrides[get_settings] = get_settings_override  # type: ignore
+    test_app.dependency_overrides[get_settings] = get_settings_override  # type: ignore
     store = file_storage_mapping[file_storage_service_type.get()](get_settings_override())
 
     asyncio.run(store._init_buckets())  # noqa
-    with TestClient(app) as client:
+    with TestClient(test_app) as client:
         yield client
     # shutil.rmtree(os.path.join(os.getcwd(), "storage_test"), ignore_errors=True)

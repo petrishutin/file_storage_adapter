@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     GOOGLE_APPLICATION_CREDENTIALS: str = "project-credentials.json"
 
     class Config:
-        env_file = "/.env"
+        env_file = "../.env"
         env_file_encoding = "utf-8"
 
 
