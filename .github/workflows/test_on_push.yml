@@ -23,8 +23,7 @@ jobs:
       - name: Create env file
         run: echo '${{ secrets.ENVS }}' > .env
 
-      - name: Set env variables
-        run: echo BUCKETS=${{ secrets.BUCKETS }} >> $GITHUB_ENV
-
       - name: Run pytest
+        env:
+          BUCKETS: ${{ secrets.BUCKETS }}
         run: make test
