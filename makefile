@@ -4,7 +4,6 @@ deps:
 		pip install -r requirements-dev.txt
 
 up:
-	export TEST_MODE=1
 	docker-compose up --build
 
 stop:
@@ -32,7 +31,6 @@ lint:
 	mypy ./tests
 
 test:
-	export TEST_MODE=1
-	docker-compose up localstack
+	docker-compose up -d localstack
 	pytest -vv -s
 	docker-compose down
