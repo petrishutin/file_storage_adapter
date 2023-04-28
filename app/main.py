@@ -22,10 +22,9 @@ app = FastAPI(
 def init_db():
     settings = get_settings()
     if settings.FILE_STORAGE_TYPE == "LocalFileStorage":
-        for bucket in settings.BUCKET_LIST:
-            bucket_path = os.path.join(settings.LOCAL_FILE_STORAGE_DIR, bucket)
-            if not os.path.exists(bucket_path):
-                os.mkdir(bucket_path)
+        from app.file_storage.local_file_storage import LocalFileStorage
+        storage = LocalFileStorage(settings)
+        storage._set_up()
 
 
 @app.exception_handler(FileNotFoundError)
@@ -51,8 +50,8 @@ def storage(settings: Settings = Depends(get_settings)):
 
 @app.post("/", status_code=201)
 async def upload_data(
-    file: bytes = File(...),
-    client: FileStorage = Depends(storage),
+        file: bytes = File(...),
+        client: FileStorage = Depends(storage),
 ):
     return await client.upload(file)
 
