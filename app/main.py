@@ -17,13 +17,13 @@ app = FastAPI(
 
 
 @app.on_event("startup")
-def init_db():
+async def init_db():
     settings = get_settings()
     if settings.FILE_STORAGE_TYPE == "LocalFileStorage":
         from app.file_storage.local_file_storage import LocalFileStorage
 
-        storage = LocalFileStorage(settings)
-        storage._set_up()
+        store = LocalFileStorage(settings)
+        await store._set_up()
 
 
 @app.exception_handler(FileNotFoundError)
