@@ -1,5 +1,3 @@
-import os
-
 from fastapi import Depends, FastAPI, File, Request, Response
 from fastapi.responses import JSONResponse
 
@@ -23,6 +21,7 @@ def init_db():
     settings = get_settings()
     if settings.FILE_STORAGE_TYPE == "LocalFileStorage":
         from app.file_storage.local_file_storage import LocalFileStorage
+
         storage = LocalFileStorage(settings)
         storage._set_up()
 
@@ -50,8 +49,8 @@ def storage(settings: Settings = Depends(get_settings)):
 
 @app.post("/", status_code=201)
 async def upload_data(
-        file: bytes = File(...),
-        client: FileStorage = Depends(storage),
+    file: bytes = File(...),
+    client: FileStorage = Depends(storage),
 ):
     return await client.upload(file)
 
