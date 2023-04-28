@@ -13,7 +13,7 @@ class FileStorageService(str, Enum):
 
 
 class Settings(BaseSettings):
-    OPENAPI_URL: str = "/openapi.json"  # set empty string to disable openapi
+    OPENAPI_URL: str | None = "/openapi.json"  # set empty string to disable openapi
     FILE_STORAGE_TYPE: FileStorageService = "LocalFileStorage"  # type: ignore
     # pass bucket names separated by comma at your cloud service here
     BUCKETS: str = os.getenv("BUCKETS")  # type: ignore
