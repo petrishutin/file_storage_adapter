@@ -1,3 +1,5 @@
+import os
+
 from fastapi import Depends, FastAPI, File, Request, Response
 from fastapi.responses import JSONResponse
 
@@ -14,6 +16,16 @@ app = FastAPI(
     title="File storage service",
     openapi_url=get_settings().OPENAPI_URL,
 )
+
+
+@app.on_event("startup")
+def init_db():
+    settings = get_settings()
+    if settings.FILE_STORAGE_TYPE == "LocalFileStorage":
+        for bucket in settings.BUCKET_LIST:
+            bucket_path = os.path.join(settings.LOCAL_FILE_STORAGE_DIR, bucket)
+            if not os.path.exists(bucket_path):
+                os.mkdir(bucket_path)
 
 
 @app.exception_handler(FileNotFoundError)

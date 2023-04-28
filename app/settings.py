@@ -31,10 +31,6 @@ class Settings(BaseSettings):
     # Google Cloud Storage settings -------------------------------------
     GOOGLE_APPLICATION_CREDENTIALS: str = "project-credentials.json"
 
-    # Test settings -------------------------------------
-    # Pass file_storage types names separated by comma here to test them
-    TEST_TARGETS: str = "LocalFileStorage, S3FileStorage, GoogleCloudFileStorage"
-
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
