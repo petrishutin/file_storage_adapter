@@ -31,6 +31,6 @@ class Settings(BaseSettings):
     # Google Cloud Storage settings -------------------------------------
     GOOGLE_APPLICATION_CREDENTIALS: str = "project-credentials.json"
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    # class Config:
+    #     env_file = ".env"
+    #     env_file_encoding = "utf-8"

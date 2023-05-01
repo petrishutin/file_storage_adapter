@@ -9,7 +9,7 @@ def test_upload_201(client):
     response = client.post("/", files={"file": file_data})
     assert response.status_code == HTTPStatus.CREATED
     assert uuid.UUID(response.json())
-    client.delete("/", params={"file_name": response.json()})
+    client.delete(f"/{response.json()}")
 
 
 def test_download_200(client):
@@ -18,10 +18,10 @@ def test_download_200(client):
         file_data = f.read()
     response = client.post("/", files={"file": file_data})
     file_name = response.json()
-    response = client.get("/", params={"file_name": file_name})
+    response = client.get(f"/{file_name}")
     assert response.status_code == HTTPStatus.OK
     assert response.content == file_data
-    client.delete("/", params={"file_name": file_name})
+    client.delete(f"/{file_name}")
 
 
 def test_delete_204(client):
@@ -30,5 +30,5 @@ def test_delete_204(client):
         file_data = f.read()
     response = client.post("/", files={"file": file_data})
     file_name = response.json()
-    response = client.delete("/", params={"file_name": str(file_name)})
+    response = client.delete(f"/{file_name}")
     assert response.status_code == HTTPStatus.NO_CONTENT
