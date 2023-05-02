@@ -34,3 +34,13 @@ test:
 	docker-compose up -d localstack
 	pytest -vv -s
 	docker-compose down
+
+test_local:
+	docker-compose up -d localstack && bash -c 'source .env && export $$(cut -d= -f1 .env) && pytest -vv -s' && docker-compose down
+
+build_image:
+	docker build --target prod -t petrishutin/filestorage:latest .
+
+push_image: build_image
+	docker login
+	docker push petrishutin/filestorage:latest
