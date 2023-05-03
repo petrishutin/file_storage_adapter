@@ -15,7 +15,7 @@ jobs:
         run: make deps
 
       - name: Run linters
-        run: make lint
+        run: make check
 
       - name: Prepare GCP auth
         run: echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' > project-credentials.json

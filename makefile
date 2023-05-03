@@ -15,7 +15,7 @@ down:
 rebuild:
 	docker-compose up -d --build app
 
-reformat:
+lint:
 	black .
 	isort .
 	flake8
@@ -23,7 +23,7 @@ reformat:
 	mypy ./tests
 
 
-lint:
+check:
 	black --check .
 	isort --check-only .
 	flake8
@@ -44,3 +44,6 @@ build_image:
 push_image: build_image
 	docker login
 	docker push petrishutin/filestorage:latest
+
+login_gar:
+	docker login us-central1-docker.pkg.dev/august-gradient-382709/repo1
