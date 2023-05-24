@@ -35,7 +35,7 @@ test:
 	pytest -vv -s
 	docker-compose down
 
-test_local:
+test_local: lint
 	docker-compose up -d localstack && bash -c 'source .env && export $$(cut -d= -f1 .env) && pytest -vv -s' && docker-compose down
 
 build_image:
