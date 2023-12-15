@@ -23,7 +23,7 @@ async def init_db():
         from app.file_storage.local_file_storage import LocalFileStorage
 
         store = LocalFileStorage(settings)
-        await store._set_up()
+        await store._set_up()  # noqa
 
 
 @app.exception_handler(FileNotFoundError)

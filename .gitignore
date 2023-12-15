@@ -6,4 +6,5 @@ venv
 /.env
 .local_file_storage
 project-credentials.json
-k8s/*
+k8s/secret.yaml
+k8s/gcloudconf.json

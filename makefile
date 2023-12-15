@@ -1,3 +1,5 @@
+REGISTRY=us-central1-docker.pkg.dev/flawless-acre-387710/repo1
+
 deps:
 		pip install --upgrade pip
 		pip install -r requirements.txt
@@ -45,5 +47,9 @@ push_image: build_image
 	docker login
 	docker push petrishutin/filestorage:latest
 
-login_gar:
-	docker login us-central1-docker.pkg.dev/august-gradient-382709/repo1
+push_image_gar:
+	docker login
+	docker build --target prod -t $(REGISTRY)/filestorage:latest .
+	docker push $(REGISTRY)/filestorage:latest
+
+

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storage  # имя деплоймента
+  namespace: filestorage  # принадлежность к пространству имен
+spec:  # спецификация деплоймента
+  selector:  # (слектор как его найти)
+    matchLabels:
+      app: storage
+  replicas: 1  # Количество реплик. В промышленной среде 2 и более
+  template:
+    metadata:
+      labels:
+        app: storage
+    spec:
+      containers:
+        - name: storage
+          image: petrishutin/filestorage:latest
+          ports:
+            - containerPort: 8000
+          command: ["/entrypoint.sh"]
+          env:
+            - name: FILE_STORAGE_TYPE
+              value: "LocalFileStorage"
+            - name: BUCKETS
+              value: "test-1,test-2,test-3"
+#      imagePullSecrets:
+#        - name: registry
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: storage-service
+  namespace: storage
+  labels:
+    app: storage-service # метка для слектора (Каждый объект может в кубе может иметь совою метку). Это собственная метка сервися а не метка на которую он смотрит.
+spec:
+  ports:
+    - name: storage-port # имя порта
+      port: 8101 # порт на котором будет доступен сервис
+      targetPort: 8000 # порт контейнера (приложения)
+  selector:
+    app: storage # А вот это уже метка соответсвие которой будет проверять сервис из множества подов в неймспейсе
+---
